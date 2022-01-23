@@ -16,24 +16,20 @@ function Drawer({ onClose, onRemove, items = [] }) {
    const totalPrice = cartItems.reduce((sum, obj) => sum + obj.price, 0);
 
    const onClickOrder = async () => {
-      try {
-         setIsLoading(true);
-         const { data } = await axios.post(`${Url}/orders`, {
-            items: cartItems,
-         });
-         setOrderId(data.id);
-         setIsOrderComplete(true);
-         setCartItems([]);
+      setIsLoading(true);
+      const { data } = await axios.post(`${Url}/orders`, {
+         items: cartItems,
+      });
+      setOrderId(data.id);
+      setIsOrderComplete(true);
+      setCartItems([]);
 
-         for (let i = 0; i < cartItems.length; i++) {
-            const item = cartItems[i];
-            await axios.delete(`${Url}/cart` + item.id);
-            await delay(1000);
-         }
-      } catch (error) {
-         alert("Помилка при створенні замовлення");
-         console.log(error);
+      for (let i = 0; i < cartItems.length; i++) {
+         const item = cartItems[i];
+         await axios.delete(`${Url}/cart` + item.id);
+         await delay(1000);
       }
+
       setIsLoading(false);
    };
 
